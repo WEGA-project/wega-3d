@@ -212,5 +212,5 @@ module krepezh(){
 
 korpus();
 
-translate([0, 0, 73])krishka();
+translate([0, 0, 33])krishka();
 //translate([Xr,Yr,Zk/2+Rmink-zp-Zr])board()

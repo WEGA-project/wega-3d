@@ -41,7 +41,7 @@ module korpus(){
     }
     igly();// Дырки для игл
   }
-  igly();// Сами иглы
+  //igly();// Сами иглы
 }
 
 module igly(){
@@ -71,15 +71,18 @@ module zachita(){
 module chechol(){
   difference(){
     union(){
-      translate([0, 0, -10])cylinder(d1 = Dk + 4, d2 = Dk + 2, 20);
-      translate([0, 0, 10])sphere(d = Dk + 2);
-      cylinder(d = 7, h = 20);
+      translate([0, 0, -10])cylinder(d1 = Dk + 5, d2 = Dk + 4, 22);
+      translate([0, 0, 12])sphere(d = Dk + 4);
+      translate([0, 0, 17])cylinder(d1 = 16,d2 = 7, h = 7);
+      
     }
-    translate([0, 0, -12])cylinder(d1 = Dk + 3, d2 = Dk + 1, 20);
-    translate([0, 0, 8])sphere(d = Dk + 1);
-    translate([0, 0, 1])cylinder(d = 5, h = 20);
+    translate([0, 0, -12])cylinder(d1 = Dk + 4, d2 = Dk + 2, 20);
+    translate([0, 0, 10])sphere(d = Dk + 3);
+    translate([0, 0, 1])cylinder(d = 5, h = 25);
+    translate([0, 0, -19])korpus();
   }
+  
 }
 chechol();
-translate([0, 0, -60])korpus();
-translate([0, 0, -120])zachita();
+//translate([0, 0, -60])korpus();
+//translate([0, 0, -120])zachita();
