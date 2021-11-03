@@ -39,7 +39,8 @@ j35s = 14;// Расстояние между джеками 3.5
 j35h = 10;// Высота подъема отверстий 3.5 от средней линии корпуса
 j35f = 4;// Размер шрифта подписей
 j35font = "Liberation Arial:style=Bold";// Шрифт надписей
-Fg = 0.8;// Глубина выдавливания
+Fg = 0.8;// Глубина выдавливания на крышке
+pvd=0.4; // Выдавливание подписей разъемов
 
 // Высота остальных отверстий
 Hph = 14 - 3;// pH
@@ -115,12 +116,7 @@ module korpus(){
     translate([j35s * 4, -Rmink + Bk + 1, -j35h])rotate([90, 0, 0])cylinder(d = j35d, h = Rmink);
     translate([j35s * 5, -Rmink + Bk + 1, -j35h])rotate([90, 0, 0])cylinder(d = j35d, h = Rmink);
 
-// Подписи для jack 3.5 гнезд// Подписи для jack 3.5 гнезд
-    translate([1 * j35s + j35d / 2, -Rmink + Fg, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("I2C", font = j35font, size = j35f);
-    translate([2 * j35s + j35d / 2, -Rmink + Fg, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("1w", font = j35font, size = j35f);
-    translate([3 * j35s + j35d / 2, -Rmink + Fg, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("PR", font = j35font, size = j35f);
-    translate([4 * j35s + j35d / 2, -Rmink + Fg, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("US", font = j35font, size = j35f);
-    translate([5 * j35s + j35d / 2, -Rmink + Fg, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("EC", font = j35font, size = j35f);
+
 
 // Остальные отверстия с подписями// Остальные отверстия с подписями
     translate([Rmink, Yk + Rmink + Bk + 1, -Hph])rotate([90, 0, 0])cylinder(d = 11, h = Rmink);
@@ -130,6 +126,12 @@ module korpus(){
     translate([60 + Rmink, Yk + Rmink + Bk + 1, -H12v])rotate([90, 0, 0])cylinder(d = 8.5, h = Rmink);
     translate([60 + Rmink - 8.5 / 2, Yk + Rmink - Fg, 0 + 8.5 + 3 - H12v])rotate([90, 180, 180])linear_extrude(Fg + 1)text("12V", font = j35font, size = j35f);
   }
+ // Подписи для jack 3.5 гнезд// Подписи для jack 3.5 гнезд
+    translate([1 * j35s + j35d / 2, -Rmink + Fg+1-pvd, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("I2C", font = j35font, size = j35f);
+    translate([2 * j35s + j35d / 2, -Rmink + Fg+1-pvd, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("1w", font = j35font, size = j35f);
+    translate([3 * j35s + j35d / 2, -Rmink + Fg+1-pvd, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("PR", font = j35font, size = j35f);
+    translate([4 * j35s + j35d / 2, -Rmink + Fg+1-pvd, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("US", font = j35font, size = j35f);
+    translate([5 * j35s + j35d / 2, -Rmink + Fg+1-pvd, -j35h + j35d + 3])rotate([270, 0, 180])linear_extrude(Fg + 1)text("EC", font = j35font, size = j35f);
 
   difference(){
     translate([sx + Xr, sy + Yr, -(Zr - Zk) - Zk / 2 + Rmink])cylinder(h = Zr, r = Dr);
