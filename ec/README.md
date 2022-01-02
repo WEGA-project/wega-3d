@@ -11,5 +11,5 @@
 ### Корпус EC v5
 
 <div align="center">
-<a href="v5/img/ec_1.jpg"><img src="v5/img/ec_1.jpg" width="300"></a> &emsp; <a href="v5/img/ec_2.jpg"><img src="v5/img/ec_2.jpg" width="300"></a>&emsp; <a href="v5/img/ec_3.jpg"><img src="v5/img/ec_3.jpg" width="300"></a>
+<a href="v5/img/ec_2.jpg"><img src="v5/img/ec_2.jpg" width="300"></a>&emsp; <a href="v5/img/ec_1.jpg"><img src="v5/img/ec_1.jpg" width="300"></a> &emsp; <a href="v5/img/ec_3.jpg"><img src="v5/img/ec_3.jpg" width="300"></a>
 </div>
