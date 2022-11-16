@@ -12,7 +12,7 @@
 tol=0.06;
 
 // Допускается свес для удаления свеса; от 0 до 0,999 (0 = нет, 0,5 = 45 градусов, 1 = бесконечно)
-allowed_overhang = 0.5;
+allowed_overhang = 0.85;
 
 
 // -------- Подробная информация о трубках, используемых в насосе, в мм ------------
@@ -47,7 +47,7 @@ Wy=0.0;
 Yd=3;
 
 // Толщина, т.е. высота в мм
-T=14;
+T=22;
 
 // Толщина ребер жетскости
 Tz=4;
@@ -73,7 +73,12 @@ nTwist=0.5;
 // максимальное отношение глубины зубьев
 DR=2;
 
+// Высота разреза (0  по центру)
+Hcut=2;
+
+
 h=0;
+
 
 // ----------------End of customizable values -----------------
 
@@ -127,10 +132,10 @@ sun_min_radius = max (sun_base_radius,sun_root_radius);
 //	gear2D(number_of_teeth=number_of_teeth_on_planets, circular_pitch=pitch, pressure_angle=P, depth_ratio=DR, clearance=tol);
 //}
 
-translate([0,0,T/2])
-{
-	// outer ring
-	difference()
+
+
+module korp(){
+    	difference()
 	{
 		// HACK: Add tubing depth clearance value to the total OD, otherwise the outer part may be too thin. FIXME: This is a quick n dirty way and makes the actual OD not match what the user entered...
 	union(){
@@ -157,12 +162,30 @@ translate([0,0,T/2])
 			}
 		}
 	}
+}
 
 
+translate([0,0,T/2])
+{
+	// Корпус
+   difference(){
+    korp();
+translate([-D/2+2,-(D+Dy)/2-1,Hcut])cube([D-4,D+Dy+2,T]);
+   }
 
-	// sun gear
+rotate([0,180,0]){
+
+translate([D+D/3,0,0]){
+    intersection() {
+translate([-D/2+2,-(D+Dy)/2-1,Hcut])cube([D-4,D+Dy+2,T]);
+korp();
+    }
+}
+}
+
+	// Соленоид
+translate([0,D,0]){    
 	rotate([0,0,(np+1)*180/ns+phi*(ns+np)*2/ns])
-	
 	difference()
 	{
 
@@ -197,11 +220,11 @@ translate([0,0,T/2])
 		}
 	
 	}
+}
 
 
-
-	// planet gears
-
+	// Планеты
+translate([D,0,0]){   
 	for(i=[1:m])
 	{
 
@@ -237,9 +260,11 @@ translate([0,0,T/2])
 			}
 		}
 	}
-	
+}
+
 }
 // Монтажная юбка
+module yubka(){
 difference() {
     $fn=100;
     translate([0,0,-Wy])cylinder(d=D+Dy,h=Hy);
@@ -249,7 +274,10 @@ difference() {
      translate([0,-D/2-Dy/4,-Wy-1]) cylinder(d=Yd,h=Hy+2);
      translate([0,D/2+Dy/4,-Wy-1]) cylinder(d=Yd,h=Hy+2);
      }
-  
+}
+
+yubka();
+
   // Ребра жетскости
     //rebra();
 module rebra(){     
@@ -257,13 +285,19 @@ module rebra(){
    translate([-D/2*cos(45),D/2*cos(45),h]) rotate(a=[45,-90,0])  linear_extrude(height = Tz, center = true) polygon(points=[[0,0],[T,0],[0,Dy/2]]);
    translate([-D/2*cos(45),-D/2*cos(45),h]) rotate(a=[135,-90,0])  linear_extrude(height = Tz, center = true) polygon(points=[[0,0],[T,0],[0,Dy/2]]);  
    translate([D/2*cos(45),-D/2*cos(45),h]) rotate(a=[-135,-90,0])  linear_extrude(height = Tz, center = true) polygon(points=[[0,0],[T,0],[0,Dy/2]]);  
+difference(){
+	$fn=100;
+   translate([-5,-(D+Dy)/2,h])cube([10,(D+Dy),T]);
+     translate([D/2+Dy/4,0,-Wy-1]) cylinder(d=Yd,h=Hy+2);
+     translate([-D/2-Dy/4,0,-Wy-1]) cylinder(d=Yd,h=Hy+2);
+     translate([0,-D/2-Dy/4,-Wy-1]) cylinder(d=Yd,h=Hy+20);
+     translate([0,D/2+Dy/4,-Wy-1]) cylinder(d=Yd,h=Hy+20);
+   }
 }
-//  difference() { 
-//    $fn=200;  
-// translate([0,0,-Wy])cylinder(d=D,h=Hy-1);
-// translate([0,0,-Wy-1])cylinder(d1=D+2,d2=D-5,Hy+1);  
-//      
-//      }
+
+
+
+// Скос для уменьшения навеса при 3D
 module planet_overhangfix(
 	number_of_teeth=15,
 	circular_pitch=10,
@@ -298,7 +332,9 @@ module planet_overhangfix(
 	}
 }
 
-module exitholes(distance_apart, hole_diameter)
+
+// Отверстия ввода трубок
+module exitholes(distance_apart, hole_diameter, len)
 {
 	translate([distance_apart, len/2, 0])
 	{
@@ -316,12 +352,13 @@ module exitholes(distance_apart, hole_diameter)
 			{
 				
                     cylinder(r=hole_diameter/2,h=len,center=true,$fn=100);
-                
+              
                 
 			}
 		}
 	}
 }
+
 
 module rack(
 	number_of_teeth=15,
@@ -332,6 +369,7 @@ module rack(
 	gear_thickness=5,
 	flat=false){
 addendum=circular_pitch/(4*tan(pressure_angle));
+
 
 flat_extrude(h=gear_thickness,flat=flat)translate([0,-clearance*cos(pressure_angle)/2])
 	union(){
@@ -379,6 +417,7 @@ union(){
 			helix_angle,
 			gear_thickness/2);
 }}
+
 
 module gear (
 	number_of_teeth=15,
@@ -449,6 +488,7 @@ intersection(){
 	}
 }}
 
+
 module halftooth (
 	pitch_angle,
 	base_radius,
@@ -467,10 +507,12 @@ p=[[0,0],
 	involute(base_radius,angle[4]+start_angle),
 	involute(base_radius,angle[5]+start_angle)];
 
+
 difference(){
 	rotate(-pitch_angle-half_thick_angle)polygon(points=p);
 	square(2*outer_radius);
-}}
+}
+}
 
 // Mathematical Functions
 //===============
